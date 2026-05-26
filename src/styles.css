@@ -484,6 +484,27 @@ pre.code, .code-block {
   transition: width 0.3s var(--ease);
 }
 
+/* Icon-only header links (e.g. GitHub) */
+.nav-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-right: 4px;
+  border-radius: 999px;
+  color: var(--ink-3);
+  transition: color 0.15s var(--ease), background 0.15s var(--ease);
+}
+.nav-icon-link:hover {
+  color: var(--ink-1);
+  background: var(--bg-2);
+}
+.nav-icon-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--green-rgb), 0.25);
+}
+
 /* Theme toggle */
 .theme-toggle {
   display: inline-flex;

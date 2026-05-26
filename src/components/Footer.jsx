@@ -1,5 +1,5 @@
 import React from "react";
-import { Logo } from "./Nav.jsx";
+import { Logo, GitHubIcon, REPO_URL } from "./Nav.jsx";
 import { navigate } from "../util.jsx";
 
 function sectionLink(modId) {
@@ -33,6 +33,7 @@ function Footer() {
             <strong style={{ color: "var(--ink-1)" }}>GenAI Visualizer</strong>
           </div>
           <p>Interactive demos for understanding generative AI. Built for learners, not production.</p>
+          <p className="dim" style={{ marginTop: 12 }}>© {new Date().getFullYear()} — for learning only.</p>
         </div>
 
         <div>
@@ -55,9 +56,36 @@ function Footer() {
         </div>
 
         <div>
-          <div className="label" style={{ marginBottom: 12 }}>Course</div>
-          <p style={{ marginBottom: 8 }}>A companion to the GenAI Live + GenAI Course lectures.</p>
-          <p className="dim">© {new Date().getFullYear()} — for learning only.</p>
+          <div className="label" style={{ marginBottom: 12 }}>Source</div>
+          <p style={{ marginBottom: 12, color: "var(--ink-2)" }}>
+            Open source. Found a bug or want to add a demo? PRs welcome.
+          </p>
+          <a
+            href={REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              color: "var(--ink-1)",
+              padding: "6px 10px",
+              border: "1px solid var(--border-hi)",
+              borderRadius: 999,
+              fontSize: 12,
+              transition: "border-color 0.15s var(--ease), color 0.15s var(--ease)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = "var(--green)";
+              e.currentTarget.style.color = "var(--green)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = "var(--border-hi)";
+              e.currentTarget.style.color = "var(--ink-1)";
+            }}
+          >
+            <GitHubIcon />
+            <span>github</span>
+            <span style={{ color: "var(--ink-4)" }}>↗</span>
+          </a>
         </div>
       </div>
     </footer>
