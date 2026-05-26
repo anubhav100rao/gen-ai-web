@@ -25,7 +25,7 @@ function useHashRoute() {
 function navigate(to) {
   if (to === "home") window.location.hash = "";
   else window.location.hash = "/" + to;
-  window.scrollTo({ top: 0, behavior: "instant" });
+  window.scrollTo({ top: 0, behavior: "auto" });
 }
 
 // Deterministic hash → float in [0,1)
@@ -88,21 +88,40 @@ const TOKEN_COLORS = [
   { bg: "rgba(var(--orange-rgb), 0.18)",  fg: "var(--orange)" },
 ];
 
+function escapeHtml(text) {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
 // Tiny syntax highlighter for python-ish code (regex-based, good enough)
 function highlight(code) {
-  const KW = /\b(def|class|return|import|from|as|if|else|elif|for|in|while|with|yield|lambda|None|True|False|and|or|not|is|pass|break|continue|raise|try|except|finally|async|await)\b/g;
-  const STR = /(".*?"|'.*?')/g;
-  const COM = /(#[^\n]*)/g;
-  const NUM = /\b(\d+\.?\d*)\b/g;
-  const FN = /\b([a-zA-Z_][a-zA-Z0-9_]*)(?=\()/g;
-  // escape html
-  let s = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  s = s.replace(COM, '<span class="com">$1</span>');
-  s = s.replace(STR, '<span class="str">$1</span>');
-  s = s.replace(KW, '<span class="kw">$1</span>');
-  s = s.replace(NUM, '<span class="num">$1</span>');
-  s = s.replace(FN, '<span class="fn">$1</span>');
-  return s;
+  const token =
+    /#[^\n]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\b(?:def|class|return|import|from|as|if|else|elif|for|in|while|with|yield|lambda|None|True|False|and|or|not|is|pass|break|continue|raise|try|except|finally|async|await)\b|\b\d+(?:\.\d+)?\b|\b[a-zA-Z_][a-zA-Z0-9_]*(?=\()/g;
+
+  let out = "";
+  let last = 0;
+
+  for (const match of code.matchAll(token)) {
+    const value = match[0];
+    out += escapeHtml(code.slice(last, match.index));
+
+    let cls = "fn";
+    if (value.startsWith("#")) cls = "com";
+    else if (value.startsWith("\"") || value.startsWith("'")) cls = "str";
+    else if (/^\d/.test(value)) cls = "num";
+    else if (!/^[a-zA-Z_]/.test(value)) cls = "";
+    else if (!code[match.index + value.length]?.startsWith("(")) cls = "kw";
+
+    out += cls
+      ? `<span class="${cls}">${escapeHtml(value)}</span>`
+      : escapeHtml(value);
+    last = match.index + value.length;
+  }
+
+  out += escapeHtml(code.slice(last));
+  return out;
 }
 
 function Code({ children, lang = "python" }) {

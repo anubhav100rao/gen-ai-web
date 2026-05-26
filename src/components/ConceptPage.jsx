@@ -34,11 +34,7 @@ function ConceptHeader({ concept }) {
     }}>
       <div className="container">
         {/* breadcrumb */}
-        <div style={{
-          display: "flex", alignItems: "center", gap: 12,
-          fontSize: 11, letterSpacing: "0.1em", textTransform: "uppercase",
-          color: "var(--ink-4)", marginBottom: 32,
-        }}>
+        <div className="concept-breadcrumb">
           <a href="#" onClick={(e) => { e.preventDefault(); navigate("home"); }}
             style={{ color: "var(--ink-3)" }}>genai visualizer</a>
           <span>/</span>
@@ -48,11 +44,11 @@ function ConceptHeader({ concept }) {
           }, 50); }} style={{ color: "var(--ink-3)" }}>{c.module.title.toLowerCase()}</a>
           <span>/</span>
           <span style={{ color: "var(--green)" }}>{c.title.toLowerCase()}</span>
-          <span style={{ flex: 1 }} />
-          <span className="num">{String(idx + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
+          <span className="concept-breadcrumb__spacer" />
+          <span className="num concept-progress">{String(idx + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: 64, alignItems: "end" }}>
+        <div className="concept-hero">
           <div>
             <div className="eyebrow" style={{ marginBottom: 16 }}>
               module {c.module.num} · {c.module.title.toLowerCase()}
@@ -60,7 +56,7 @@ function ConceptHeader({ concept }) {
             <h1 className="h-1">{c.title}</h1>
             <p className="lead" style={{ marginTop: 16 }}>{c.oneline}</p>
           </div>
-          <div style={{ textAlign: "right" }}>
+          <div className="concept-meta">
             <div style={{ display: "inline-flex", flexDirection: "column", gap: 6, alignItems: "flex-end" }}>
               <span className="chip chip--green">{c.tag}</span>
               <span className="dim" style={{ fontSize: 11 }}>~5 min · interactive</span>

@@ -54,7 +54,7 @@ function Hero() {
       padding: "96px 0 80px",
     }}>
       <div className="container">
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1fr)", gap: 64, alignItems: "center" }}>
+        <div className="hero-layout">
           <div>
             <div className="eyebrow" style={{ marginBottom: 24 }}>
               v0.1 — a visual companion to gen-ai live + course
@@ -73,7 +73,7 @@ function Hero() {
               {" "}and turn them into something you can poke at, break, and intuit.
             </p>
 
-            <div style={{ marginTop: 36, display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <div className="hero-actions">
               <button className="btn btn--primary" onClick={() => navigate("tokenizer")}>
                 start with tokens →
               </button>
@@ -85,11 +85,10 @@ function Hero() {
               </button>
             </div>
 
-            <div style={{ marginTop: 48, display: "flex", gap: 32, color: "var(--ink-3)", fontSize: 12 }}>
+            <div className="hero-stats">
               <Stat n="12" label="interactive demos" />
               <Stat n="4"  label="modules" />
               <Stat n="0"  label="API keys needed" />
-              <Stat n="~2h" label="to skim, longer to play" />
             </div>
           </div>
 
@@ -128,7 +127,7 @@ function Stat({ n, label }) {
   return (
     <div>
       <div className="num" style={{ color: "var(--ink-1)", fontSize: 20, fontWeight: 600 }}>{n}</div>
-      <div style={{ fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase" }}>{label}</div>
+      <div style={{ fontSize: 10, textTransform: "uppercase" }}>{label}</div>
     </div>
   );
 }
@@ -153,19 +152,72 @@ function TokenWord({ c, children }) {
 // Modules grid
 // ============================================================
 function ModulesGrid() {
+  const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLowerCase();
+
+  const filteredModules = useMemo(() => {
+    if (!normalizedQuery) return MODULES;
+
+    return MODULES.map((module) => {
+      const moduleText = [module.title, module.blurb, module.num].join(" ").toLowerCase();
+      const moduleMatches = moduleText.includes(normalizedQuery);
+      const concepts = moduleMatches
+        ? module.concepts
+        : module.concepts.filter((concept) => {
+            return [concept.title, concept.oneline, concept.tag, module.title]
+              .join(" ")
+              .toLowerCase()
+              .includes(normalizedQuery);
+          });
+
+      return { ...module, concepts };
+    }).filter((module) => module.concepts.length > 0);
+  }, [normalizedQuery]);
+
+  const resultCount = filteredModules.reduce((sum, module) => sum + module.concepts.length, 0);
+
   return (
     <section id="modules" style={{ padding: "80px 0 32px" }}>
       <div className="container">
-        <div className="eyebrow" style={{ marginBottom: 16 }}>the syllabus</div>
-        <h2 className="h-1" style={{ marginBottom: 8 }}>Four modules. Twelve demos.</h2>
-        <p className="lead" style={{ marginBottom: 56 }}>
-          Each demo is a single page: a thing you can mess with, a plain-language
-          explanation of what's actually happening, and the Python you'd write to do it for real.
-        </p>
+        <div className="modules-head">
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 16 }}>the syllabus</div>
+            <h2 className="h-1" style={{ marginBottom: 8 }}>Four modules. Twelve demos.</h2>
+            <p className="lead">
+              Search by concept, tag, or module, then jump straight into the demo.
+            </p>
+          </div>
 
-        {MODULES.map((m, mi) => (
+          <div className="module-search-card">
+            <label className="module-search" htmlFor="module-search">
+              <SearchIcon />
+              <input
+                id="module-search"
+                type="search"
+                value={query}
+                autoComplete="off"
+                placeholder="Search tokens, RAG, agents..."
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </label>
+            <div className="search-meta">
+              <span>{resultCount} demos</span>
+              {query && (
+                <button type="button" onClick={() => setQuery("")}>clear</button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {filteredModules.length ? filteredModules.map((m, mi) => (
           <ModuleBlock key={m.id} m={m} idx={mi} />
-        ))}
+        )) : (
+          <div className="card empty-results">
+            <h3 className="h-3">No demos found</h3>
+            <p className="muted">Try a topic like tokens, attention, search, tools, or RAG.</p>
+            <button className="btn" type="button" onClick={() => setQuery("")}>clear search</button>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -174,22 +226,17 @@ function ModulesGrid() {
 function ModuleBlock({ m, idx }) {
   return (
     <div id={"mod-" + m.id} style={{ paddingTop: 48, marginTop: idx === 0 ? 0 : 32 }}>
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "220px minmax(0, 1fr)",
-        gap: 48,
-        alignItems: "start",
-      }}>
+      <div className="module-block">
         <div style={{ position: "sticky", top: 88 }}>
           <div className="num" style={{
             fontSize: 64, lineHeight: 1, color: "var(--ink-5)",
-            fontWeight: 600, letterSpacing: "-0.04em",
+            fontWeight: 600,
           }}>{m.num}</div>
           <h3 className="h-2" style={{ marginTop: 8, color: "var(--ink-1)" }}>{m.title}</h3>
           <p className="muted" style={{ marginTop: 8, fontSize: 13 }}>{m.blurb}</p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 }}>
+        <div className="concept-grid">
           {m.concepts.map((c, ci) => (
             <ConceptCard key={c.id} c={c} idx={mi(m, ci)} accent={accentFor(m.id, ci)} />
           ))}
@@ -259,7 +306,6 @@ function ConceptCard({ c, idx, accent }) {
         <div style={{
           fontSize: 10,
           color: "var(--ink-4)",
-          letterSpacing: "0.16em",
           textTransform: "uppercase",
           marginBottom: 10,
           display: "flex",
@@ -455,7 +501,7 @@ function Philosophy() {
     <section style={{ padding: "96px 0 32px" }}>
       <div className="container">
         <div className="eyebrow" style={{ marginBottom: 24 }}>how to use this</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 32 }}>
+        <div className="philosophy-grid">
           {items.map(it => (
             <div key={it.n}>
               <div className="num" style={{ fontSize: 28, color: "var(--green)", marginBottom: 8 }}>{it.n}</div>
@@ -466,6 +512,15 @@ function Philosophy() {
         </div>
       </div>
     </section>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" />
+      <path d="M20 20l-3.5-3.5" />
+    </svg>
   );
 }
 
