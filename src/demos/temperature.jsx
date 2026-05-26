@@ -101,7 +101,7 @@ function TemperatureDemo() {
           </div>
 
           {/* sliders */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 24 }}>
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
                 <span className="label" style={{ marginBottom: 0 }}>temperature</span>

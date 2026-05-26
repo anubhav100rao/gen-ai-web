@@ -48,7 +48,7 @@ const AGENT_TASKS = {
       {
         thought: "teamLab + Ghibli + Tsukiji is a great trio: $55 total, all indoor-friendly, three different vibes. Done planning.",
         action: null,
-        answer: `**3-day Tokyo trip — total $1,225**
+        answer: `**3-day Tokyo trip — total $1,270**
 
 ✈️ ANA SFO→HND nonstop — $780
 🏨 Hotel Gracery Shinjuku, 3 nights — $435
@@ -57,7 +57,7 @@ const AGENT_TASKS = {
 🍣 Tsukiji Outer Market (free, eat-as-you-go)
 
 Note: rainy season, all three activities are indoor.
-$275 buffer for food, transit, and surprises.`,
+$230 buffer for food, transit, and surprises.`,
       },
     ],
   },

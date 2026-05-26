@@ -52,7 +52,7 @@ function ConceptHeader({ concept }) {
           <span className="num">{String(idx + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</span>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 64, alignItems: "end" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: 64, alignItems: "end" }}>
           <div>
             <div className="eyebrow" style={{ marginBottom: 16 }}>
               module {c.module.num} · {c.module.title.toLowerCase()}
@@ -76,7 +76,7 @@ function ConceptNav({ prev, next }) {
   return (
     <section style={{ borderTop: "1px solid var(--border)", marginTop: 48, padding: "32px 0" }}>
       <div className="container" style={{
-        display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16,
+        display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 16,
       }}>
         {prev ? (
           <a href={"#/" + prev.id}
@@ -142,7 +142,7 @@ function Stage({ children, padding = 32, height }) {
 function Explain({ children, aside }) {
   if (!aside) return <div style={{ maxWidth: "70ch", color: "var(--ink-2)", fontSize: 14.5, lineHeight: 1.7 }}>{children}</div>;
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 48, alignItems: "start" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", gap: 48, alignItems: "start" }}>
       <div style={{ color: "var(--ink-2)", fontSize: 14.5, lineHeight: 1.7 }}>{children}</div>
       <div>{aside}</div>
     </div>

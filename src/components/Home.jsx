@@ -54,7 +54,7 @@ function Hero() {
       padding: "96px 0 80px",
     }}>
       <div className="container">
-        <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 64, alignItems: "center" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1fr)", gap: 64, alignItems: "center" }}>
           <div>
             <div className="eyebrow" style={{ marginBottom: 24 }}>
               v0.1 — a visual companion to gen-ai live + course
@@ -176,7 +176,7 @@ function ModuleBlock({ m, idx }) {
     <div id={"mod-" + m.id} style={{ paddingTop: 48, marginTop: idx === 0 ? 0 : 32 }}>
       <div style={{
         display: "grid",
-        gridTemplateColumns: "220px 1fr",
+        gridTemplateColumns: "220px minmax(0, 1fr)",
         gap: 48,
         alignItems: "start",
       }}>
@@ -189,7 +189,7 @@ function ModuleBlock({ m, idx }) {
           <p className="muted" style={{ marginTop: 8, fontSize: 13 }}>{m.blurb}</p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16 }}>
           {m.concepts.map((c, ci) => (
             <ConceptCard key={c.id} c={c} idx={mi(m, ci)} accent={accentFor(m.id, ci)} />
           ))}
@@ -455,7 +455,7 @@ function Philosophy() {
     <section style={{ padding: "96px 0 32px" }}>
       <div className="container">
         <div className="eyebrow" style={{ marginBottom: 24 }}>how to use this</div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 32 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 32 }}>
           {items.map(it => (
             <div key={it.n}>
               <div className="num" style={{ fontSize: 28, color: "var(--green)", marginBottom: 8 }}>{it.n}</div>

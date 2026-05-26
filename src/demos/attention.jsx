@@ -58,7 +58,7 @@ const ATTENTION_EXAMPLES = {
       /*too */[0.0, 0.05,0.0,0.0,0.0,0.0,0.0,0.3,0.05,0.15,0.15,0.2,0.1],
       /*big */[0.0, 0.05,0.0,0.0,0.0,0.0,0.0,0.55,0.05,0.15,0.05,0.1,0.05],  // big → suitcase
     ],
-    note: "Classic Winograd ambiguity. With 'too big', 'it' refers to the trophy. Here, 'too' shifts attention — what would happen if you tried 'too small'?",
+    note: "Classic Winograd schema. The correct reading is that 'it' = trophy (the trophy is too big to fit). Smaller models often get this wrong — notice 'it' here attends most to 'suitcase' instead. Resolving the reference requires combining 'too big' with world knowledge across layers, not just local attention.",
   },
 };
 
@@ -133,9 +133,9 @@ function AttentionDemo() {
                   const w = ex.weights[focusQ][j];
                   return (
                     <span key={j} className="tok" style={{
-                      background: `rgba(0,255,136,${w * 1.2})`,
+                      background: `rgba(var(--green-rgb), ${w * 1.2})`,
                       color: w > 0.4 ? "var(--bg)" : "var(--ink-2)",
-                      border: `1px solid rgba(0,255,136,${Math.max(0.15, w * 1.5)})`,
+                      border: `1px solid rgba(var(--green-rgb), ${Math.max(0.15, w * 1.5)})`,
                       fontSize: 13,
                       padding: "4px 8px",
                     }}
@@ -214,7 +214,7 @@ def attention(Q, K, V, mask=None):
         <Experiments items={[
           "Click 'it' in the cat sentence. It strongly attends back to 'cat' — that's the model resolving the pronoun.",
           "Click 'reading' in the second sentence. It attends to 'she' (the subject) and 'book' (the object).",
-          "Look at the Winograd sentence. 'it' attends to 'suitcase' — but the disambiguator is the word 'big'. Real attention spans dozens of layers; this is a snapshot of one.",
+          "Look at the Winograd sentence. The correct answer is 'it' = trophy, but in this single-layer snapshot 'it' attends most to 'suitcase'. Pronoun resolution like this needs many layers of attention plus world knowledge to get right.",
           "In a real transformer, every layer rewrites these patterns. By layer 30, attention is doing things humans can barely interpret.",
         ]} />
       </Section>
@@ -261,7 +261,7 @@ function AttentionMatrix({ ex, focusQ, setHoverQ }) {
               y={labelW + i * cell}
               width={cell - 1}
               height={cell - 1}
-              fill={`rgba(0,255,136,${w * 1.2})`}
+              fill={`rgba(var(--green-rgb), ${w * 1.2})`}
               stroke={i === focusQ ? "rgba(var(--green-rgb), 0.6)" : "transparent"}
               strokeWidth={i === focusQ ? 1 : 0}
               onMouseEnter={() => setHoverQ(i)}

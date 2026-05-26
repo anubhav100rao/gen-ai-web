@@ -141,7 +141,7 @@ function ToolsDemo() {
     <React.Fragment>
       <Section eyebrow="the demo" title="The model calls your function. Watches the result. Replies.">
         <Stage padding={0}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", minHeight: 540 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px", minHeight: 540 }}>
             {/* Chat */}
             <div style={{ padding: 24, display: "flex", flexDirection: "column" }}>
               <div className="label">scenario</div>

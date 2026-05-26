@@ -99,7 +99,7 @@ function MCPDemo() {
     <React.Fragment>
       <Section eyebrow="the demo" title="One client. Many standardized servers.">
         <Stage padding={0}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 360px", minHeight: 560 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 360px", minHeight: 560 }}>
             {/* Diagram */}
             <div style={{ padding: 24 }}>
               <MCPDiagram selected={selected} setSelected={setSelected} activeFlow={activeFlow} />

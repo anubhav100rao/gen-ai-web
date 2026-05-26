@@ -50,9 +50,6 @@ function Nav() {
           <span style={{ fontSize: 13, fontWeight: 600, letterSpacing: "-0.01em" }}>
             GenAI Visualizer
           </span>
-          <span className="chip chip--green" style={{ marginLeft: 4 }}>
-            <span className="dot dot--pulse" /> live
-          </span>
         </a>
 
         <nav style={{ display: "flex", alignItems: "center", gap: 4 }}>

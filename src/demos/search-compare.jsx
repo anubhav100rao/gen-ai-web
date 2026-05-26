@@ -80,7 +80,7 @@ const QUERY_PRESETS = [
   {
     q: "fast car",
     semanticTopics: { auto: 0.95, ai: 0.1, code: 0.1, food: 0.05 },
-    note: "BM25 finds doc 1 (matches 'car'/'fast'... well, no actual 'car' match either). Semantic finds the whole 'auto' cluster — including 'speedy automobiles' which shares no words.",
+    note: "BM25 returns nothing useful here — no doc contains the literal words 'fast' or 'car'. Semantic still finds the 'auto' cluster (Porsche, automobiles, self-driving) because their meanings cluster together in embedding space.",
   },
   {
     q: "python",
@@ -151,7 +151,7 @@ function SearchCompareDemo() {
 
           <div style={{
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
             gap: 16,
             marginTop: 28,
           }}>

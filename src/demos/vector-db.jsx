@@ -102,7 +102,7 @@ function VectorDBDemo() {
     <React.Fragment>
       <Section eyebrow="the demo" title="Drop a query. Find the nearest neighbors.">
         <Stage padding={0}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 320px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 320px" }}>
             <div style={{ padding: 16, position: "relative" }}>
               <svg ref={svgRef} viewBox={`0 0 ${PLOT_W} ${PLOT_H}`}
                 onClick={handleSvgClick}

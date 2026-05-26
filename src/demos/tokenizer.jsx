@@ -138,7 +138,7 @@ function TokenizerDemo() {
         <Stage padding={0}>
           <div style={{
             display: "grid",
-            gridTemplateColumns: "1fr 240px",
+            gridTemplateColumns: "minmax(0, 1fr) 240px",
             minHeight: 420,
           }}>
             {/* Left: input + tokens */}

@@ -1,5 +1,17 @@
 import React from "react";
 import { Logo } from "./Nav.jsx";
+import { navigate } from "../util.jsx";
+
+function sectionLink(modId) {
+  return (e) => {
+    e.preventDefault();
+    if (window.location.hash) navigate("home");
+    setTimeout(() => {
+      const el = document.getElementById("mod-" + modId);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
+}
 
 function Footer() {
   return (
@@ -12,7 +24,7 @@ function Footer() {
     }}>
       <div className="container" style={{
         display: "grid",
-        gridTemplateColumns: "1fr 1fr 1fr 1fr",
+        gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
         gap: 32,
       }}>
         <div>
@@ -26,10 +38,10 @@ function Footer() {
         <div>
           <div className="label" style={{ marginBottom: 12 }}>Sections</div>
           <ul style={{ listStyle: "none", padding: 0, margin: 0, lineHeight: 1.9 }}>
-            <li><a href="#mod-foundations" style={{ color: "var(--ink-2)" }}>Foundations</a></li>
-            <li><a href="#mod-generation" style={{ color: "var(--ink-2)" }}>Generation</a></li>
-            <li><a href="#mod-retrieval" style={{ color: "var(--ink-2)" }}>Retrieval</a></li>
-            <li><a href="#mod-agents" style={{ color: "var(--ink-2)" }}>Agents</a></li>
+            <li><a href="#" onClick={sectionLink("foundations")} style={{ color: "var(--ink-2)" }}>Foundations</a></li>
+            <li><a href="#" onClick={sectionLink("generation")} style={{ color: "var(--ink-2)" }}>Generation</a></li>
+            <li><a href="#" onClick={sectionLink("retrieval")} style={{ color: "var(--ink-2)" }}>Retrieval</a></li>
+            <li><a href="#" onClick={sectionLink("agents")} style={{ color: "var(--ink-2)" }}>Agents</a></li>
           </ul>
         </div>
 

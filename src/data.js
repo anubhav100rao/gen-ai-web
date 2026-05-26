@@ -7,7 +7,7 @@ const MODULES = [
     id: "foundations",
     num: "01",
     title: "Foundations",
-    blurb: "How language is broken into pieces a model can chew on.",
+    blurb: "How language becomes tokens, vectors, and the finite buffer the model reads from.",
     concepts: [
       { id: "tokenizer",      title: "Tokenizer",        oneline: "Text becomes numbers. Watch BPE chop words into subword units.",  tag: "input" },
       { id: "embeddings",     title: "Embeddings",       oneline: "Words become coordinates. Geometry encodes meaning.",              tag: "vectors" },
@@ -33,7 +33,7 @@ const MODULES = [
     concepts: [
       { id: "vector-db",      title: "Vector database",        oneline: "Drop a query into vector space. Find its k nearest neighbors.",    tag: "ANN" },
       { id: "search-compare", title: "Semantic vs BM25",       oneline: "Lexical match vs meaning match. Run both on the same corpus.",     tag: "search" },
-      { id: "rag",            title: "RAG pipeline",           oneline: "Retrieve, augment, generate. The four-stage loop, click by click.", tag: "pipeline" },
+      { id: "rag",            title: "RAG pipeline",           oneline: "Retrieve, augment, generate. The full pipeline, click by click.", tag: "pipeline" },
     ],
   },
   {

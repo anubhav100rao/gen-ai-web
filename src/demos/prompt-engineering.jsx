@@ -147,7 +147,6 @@ Sentence: "Anna Park, 34, an engineer at Acme Robotics in Tokyo, is leading the 
 
 function PromptEngineeringDemo() {
   const [taskId, setTaskId] = useState("word-problem");
-  const [activeStyles, setActiveStyles] = useState(["zero-shot", "few-shot", "chain-of-thought"]);
 
   const task = PROMPT_TASKS[taskId];
 
@@ -180,7 +179,7 @@ function PromptEngineeringDemo() {
 
           <div style={{
             display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
+            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
             gap: 12,
           }}>
             {Object.entries(task.prompts).map(([style, p]) => (

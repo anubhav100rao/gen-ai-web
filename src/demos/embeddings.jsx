@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { cos, dist, Code } from "../util.jsx";
+import { dist, Code } from "../util.jsx";
 import { Section, Stage, Explain, Experiments } from "../components/ConceptPage.jsx";
 
 // ============================================================
@@ -122,7 +122,7 @@ function EmbeddingsDemo() {
     <React.Fragment>
       <Section eyebrow="the demo" title="Words become coordinates">
         <Stage padding={0}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 260px", minHeight: 540 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) 260px", minHeight: 540 }}>
             {/* Plot */}
             <div style={{ padding: 16, position: "relative" }}>
               <svg viewBox={`0 0 ${VIEW_W} ${VIEW_H}`} style={{ width: "100%", height: "auto", display: "block" }}>
@@ -218,7 +218,7 @@ function EmbeddingsDemo() {
                       <span style={{ color: CAT_COLORS[n.cat] }}>{n.w}</span>
                     </span>
                     <span className="num" style={{ fontSize: 11, color: "var(--ink-3)" }}>
-                      cos {sim.toFixed(3)}
+                      sim {sim.toFixed(3)}
                     </span>
                   </div>
                 );
