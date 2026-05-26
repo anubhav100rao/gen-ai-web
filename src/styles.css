@@ -34,6 +34,9 @@
   --pink-bg: #3a0d1a55;
   --pink-rgb: 251, 113, 133;
 
+  --red: #ff5f56;
+  --red-rgb: 255, 95, 86;
+
   --yellow: #fbbf24;
   --yellow-dim: #f59e0b;
   --yellow-bg: #3a280666;
@@ -90,6 +93,9 @@
   --pink-dim: #be123c;
   --pink-bg: #fff1f2;
   --pink-rgb: 225, 29, 72;
+
+  --red: #dc2626;
+  --red-rgb: 220, 38, 38;
 
   --yellow: #b45309;
   --yellow-dim: #92400e;
@@ -304,6 +310,7 @@ input:focus, textarea:focus, select:focus {
 .chip--green  { color: var(--green);  border-color: rgba(var(--green-rgb), 0.35);  background: var(--green-bg); }
 .chip--pink   { color: var(--pink);   border-color: rgba(var(--pink-rgb), 0.35);   background: var(--pink-bg); }
 .chip--yellow { color: var(--yellow); border-color: rgba(var(--yellow-rgb), 0.35); background: var(--yellow-bg); }
+.chip--red    { color: var(--red);    border-color: rgba(var(--red-rgb), 0.35);    background: rgba(var(--red-rgb), 0.12); }
 
 .card {
   background: var(--bg-1);
@@ -768,6 +775,42 @@ pre.code, .code-block {
 
 .spread { display: flex; align-items: center; justify-content: space-between; }
 
+.demo-two-column {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  min-height: 520px;
+}
+
+.demo-sidebar {
+  padding: 24px;
+  border-left: 1px solid var(--border);
+  background: var(--bg-2);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.demo-pipeline-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(86px, 1fr));
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+  background: var(--bg-1);
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.demo-judge-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 20px;
+}
+
 /* Bar plot bar */
 .bar {
   height: 14px;
@@ -910,6 +953,16 @@ input[type="range"]::-moz-range-thumb {
 
   .concept-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .demo-two-column,
+  .demo-judge-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-sidebar {
+    border-left: 0;
+    border-top: 1px solid var(--border);
   }
 }
 

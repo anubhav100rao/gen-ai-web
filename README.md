@@ -27,7 +27,7 @@ The included `vercel.json` rewrites all paths to `index.html` so hash-based rout
 ## File layout
 
 - `src/components/` — Nav, Footer, Home, ConceptPage
-- `src/demos/` — one .jsx per concept (12 total)
+- `src/demos/` — one .jsx per concept demo
 - `src/util.jsx` — shared hooks, helpers, Code/Section/Stage primitives
 - `src/data.js` — module + concept catalog
 - `src/styles.css` — design tokens

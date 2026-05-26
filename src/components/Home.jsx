@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { navigate } from "../util.jsx";
-import { MODULES } from "../data.js";
+import {
+  CATALOG_STATS,
+  MODULES,
+  conceptSearchText,
+  normalizeSearchText,
+} from "../data.js";
 
 function Home() {
   return (
@@ -16,6 +21,8 @@ function Home() {
 // Hero
 // ============================================================
 function Hero() {
+  const { conceptCount, moduleCount } = CATALOG_STATS;
+
   // typing prompt animation
   const phrases = useMemo(() => [
     "tokenize this →",
@@ -64,7 +71,7 @@ function Hero() {
               <span style={{ color: "var(--green)" }}>visualized.</span>
             </h1>
             <p className="lead" style={{ marginTop: 24 }}>
-              Twelve interactive demos that take the buzzwords —
+              {conceptCount} interactive demos that take the buzzwords —
               {" "}<TokenWord c="green">tokens</TokenWord>,
               {" "}<TokenWord c="pink">embeddings</TokenWord>,
               {" "}<TokenWord c="yellow">attention</TokenWord>,
@@ -81,13 +88,13 @@ function Hero() {
                 className="btn"
                 onClick={() => document.getElementById("modules").scrollIntoView({ behavior: "smooth" })}
               >
-                browse all 12
+                browse all {conceptCount}
               </button>
             </div>
 
             <div className="hero-stats">
-              <Stat n="12" label="interactive demos" />
-              <Stat n="4"  label="modules" />
+              <Stat n={conceptCount} label="interactive demos" />
+              <Stat n={moduleCount} label="modules" />
               <Stat n="0"  label="API keys needed" />
             </div>
           </div>
@@ -153,22 +160,18 @@ function TokenWord({ c, children }) {
 // ============================================================
 function ModulesGrid() {
   const [query, setQuery] = useState("");
-  const normalizedQuery = query.trim().toLowerCase();
+  const normalizedQuery = normalizeSearchText(query);
+  const { conceptCount, moduleCount } = CATALOG_STATS;
 
   const filteredModules = useMemo(() => {
     if (!normalizedQuery) return MODULES;
 
     return MODULES.map((module) => {
-      const moduleText = [module.title, module.blurb, module.num].join(" ").toLowerCase();
+      const moduleText = normalizeSearchText([module.id, module.title, module.blurb, module.num].join(" "));
       const moduleMatches = moduleText.includes(normalizedQuery);
       const concepts = moduleMatches
         ? module.concepts
-        : module.concepts.filter((concept) => {
-            return [concept.title, concept.oneline, concept.tag, module.title]
-              .join(" ")
-              .toLowerCase()
-              .includes(normalizedQuery);
-          });
+        : module.concepts.filter((concept) => conceptSearchText({ ...concept, module }).includes(normalizedQuery));
 
       return { ...module, concepts };
     }).filter((module) => module.concepts.length > 0);
@@ -182,7 +185,7 @@ function ModulesGrid() {
         <div className="modules-head">
           <div>
             <div className="eyebrow" style={{ marginBottom: 16 }}>the syllabus</div>
-            <h2 className="h-1" style={{ marginBottom: 8 }}>Four modules. Twelve demos.</h2>
+            <h2 className="h-1" style={{ marginBottom: 8 }}>{moduleCount} modules. {conceptCount} demos.</h2>
             <p className="lead">
               Search by concept, tag, or module, then jump straight into the demo.
             </p>
@@ -196,7 +199,7 @@ function ModulesGrid() {
                 type="search"
                 value={query}
                 autoComplete="off"
-                placeholder="Search tokens, RAG, agents..."
+                placeholder="Search tokens, RAG, RLHF, evals..."
                 onChange={(e) => setQuery(e.target.value)}
               />
             </label>
@@ -214,7 +217,7 @@ function ModulesGrid() {
         )) : (
           <div className="card empty-results">
             <h3 className="h-3">No demos found</h3>
-            <p className="muted">Try a topic like tokens, attention, search, tools, or RAG.</p>
+            <p className="muted">Try a topic like tokens, attention, RAG, RLHF, jailbreak, or evals.</p>
             <button className="btn" type="button" onClick={() => setQuery("")}>clear search</button>
           </div>
         )}
@@ -247,18 +250,25 @@ function ModuleBlock({ m, idx }) {
 }
 
 function mi(m, ci) {
-  const order = ["01","02","03","04"].indexOf(m.num);
-  return String(order * 3 + ci + 1).padStart(2, "0");
+  let count = 0;
+  for (const mod of MODULES) {
+    if (mod.id === m.id) {
+      return String(count + ci + 1).padStart(2, "0");
+    }
+    count += mod.concepts.length;
+  }
+  return "00";
 }
 
 function accentFor(modId, ci) {
   const map = {
-    foundations: ["green","green","green"],
-    generation:  ["yellow","yellow","yellow"],
-    retrieval:   ["pink","pink","pink"],
+    foundations: ["green","green","green","green","green"],
+    generation:  ["yellow","yellow","yellow","yellow"],
+    retrieval:   ["pink","pink","pink","pink"],
     agents:      ["blue","blue","blue"],
+    "safety-eval": ["violet","violet","violet"],
   };
-  return map[modId][ci];
+  return map[modId] ? (map[modId][ci] || "green") : "green";
 }
 
 function ConceptCard({ c, idx, accent }) {
@@ -267,8 +277,9 @@ function ConceptCard({ c, idx, accent }) {
     yellow: "var(--yellow)",
     pink:   "var(--pink)",
     blue:   "var(--blue)",
+    violet: "var(--violet)",
   };
-  const ac = colors[accent];
+  const ac = colors[accent] || "var(--green)";
 
   return (
     <a
@@ -481,6 +492,94 @@ function ConceptThumb({ id, accent }) {
             </g>
           ))}
           <path d="M 190 55 Q 220 90 120 90 Q 30 90 30 55" stroke={accent} strokeWidth={1} fill="none" strokeDasharray="3 3" opacity={0.6} />
+        </svg>
+      );
+    case "next-token":
+      return (
+        <svg viewBox="0 0 240 110" style={{ width: "100%", height: "100%" }}>
+          <text x={30} y={35} fontSize={10} fill="var(--ink-3)" fontFamily="JetBrains Mono">The cat sat on the</text>
+          <rect x={145} y={23} width={45} height={16} rx={2} fill="rgba(var(--green-rgb), 0.12)" stroke={accent} strokeWidth={1} />
+          <text x={167.5} y={34} fontSize={10} textAnchor="middle" fill="var(--green)" fontFamily="JetBrains Mono" fontWeight="bold">mat</text>
+          {[50, 30, 15].map((h, i) => (
+            <g key={i}>
+              <rect x={30 + i * 55} y={90 - h} width={38} height={h} fill={i === 0 ? accent : "var(--ink-5)"} opacity={0.8} />
+              <text x={49 + i * 55} y={102} fontSize={8} textAnchor="middle" fill="var(--ink-4)" fontFamily="JetBrains Mono">{["mat", "floor", "bed"][i]}</text>
+            </g>
+          ))}
+        </svg>
+      );
+    case "sampling":
+      return (
+        <svg viewBox="0 0 240 110" style={{ width: "100%", height: "100%" }}>
+          {[65, 55, 45, 25, 10].map((h, i) => (
+            <rect key={i} x={30 + i * 22} y={88 - h} width={14} height={h} fill={i < 3 ? accent : "#3a3a3a"} opacity={i < 3 ? 1 : 0.4} />
+          ))}
+          <line x1={88} y1={15} x2={88} y2={95} stroke="var(--pink)" strokeWidth={1.2} strokeDasharray="3 2" />
+          <text x={94} y={25} fontSize={8} fill="var(--pink)" fontFamily="JetBrains Mono">k-cutoff</text>
+        </svg>
+      );
+    case "training-inference":
+      return (
+        <svg viewBox="0 0 240 110" style={{ width: "100%", height: "100%" }}>
+          <line x1={120} y1={10} x2={120} y2={100} stroke="var(--border)" strokeWidth={1} strokeDasharray="4 4" />
+          <text x={35} y={24} fontSize={8} fill="var(--ink-3)" fontFamily="JetBrains Mono">Training</text>
+          <circle cx={40} cy={55} r={8} fill="none" stroke={accent} strokeWidth={1.5} />
+          <circle cx={80} cy={55} r={8} fill="none" stroke={accent} strokeWidth={1.5} />
+          <path d="M 48 55 L 72 55" stroke={accent} strokeWidth={1} />
+          <path d="M 72 59 Q 60 67 48 59" stroke="var(--pink)" strokeWidth={1} />
+          <text x={140} y={24} fontSize={8} fill="var(--ink-3)" fontFamily="JetBrains Mono">Inference (🔒)</text>
+          <path d="M 140 55 L 195 55" stroke="var(--ink-4)" strokeWidth={1} />
+          <circle cx={140} cy={55} r={3} fill="var(--ink-3)" />
+          <circle cx={170} cy={55} r={3} fill="var(--green)" />
+          <circle cx={200} cy={55} r={3} fill="var(--ink-3)" />
+        </svg>
+      );
+    case "fine-tuning-rlhf":
+      return (
+        <svg viewBox="0 0 240 110" style={{ width: "100%", height: "100%" }}>
+          <rect x={20} y={40} width={65} height={26} rx={3} fill="rgba(var(--violet-rgb), 0.06)" stroke="var(--ink-4)" strokeWidth={1} />
+          <text x={52.5} y={56} fontSize={8} textAnchor="middle" fill="var(--ink-3)" fontFamily="JetBrains Mono">Base LLM</text>
+          <path d="M 92 53 L 132 53" stroke={accent} strokeWidth={1.2} />
+          <rect x={140} y={40} width={80} height={26} rx={3} fill="rgba(var(--violet-rgb), 0.12)" stroke={accent} strokeWidth={1.2} />
+          <text x={180} y={56} fontSize={8} textAnchor="middle" fill={accent} fontFamily="JetBrains Mono" fontWeight="bold">Fine-Tuned / RLHF</text>
+        </svg>
+      );
+    case "rag-failures":
+      return (
+        <svg viewBox="0 0 240 110" style={{ width: "100%", height: "100%" }}>
+          <rect x={20} y={42} width={75} height={26} rx={3} fill="rgba(var(--pink-rgb), 0.08)" stroke="var(--pink)" strokeWidth={1} />
+          <text x={57.5} y={58} fontSize={8} textAnchor="middle" fill="var(--ink-3)" fontFamily="JetBrains Mono">Semantic Chunk</text>
+          <path d="M 100 55 L 135 55" stroke="var(--red)" strokeWidth={1.2} />
+          <line x1={113} y1={48} x2={123} y2={62} stroke="var(--red)" strokeWidth={2} />
+          <line x1={123} y1={48} x2={113} y2={62} stroke="var(--red)" strokeWidth={2} />
+          <rect x={145} y={42} width={75} height={26} rx={3} fill="rgba(var(--red-rgb), 0.08)" stroke="var(--red)" strokeWidth={1} />
+          <text x={182.5} y={58} fontSize={8} textAnchor="middle" fill="var(--red)" fontFamily="JetBrains Mono">Model Panic / Stale</text>
+        </svg>
+      );
+    case "prompt-injection":
+      return (
+        <svg viewBox="0 0 240 110" style={{ width: "100%", height: "100%" }}>
+          <rect x={20} y={25} width={90} height={60} rx={3} fill="rgba(var(--blue-rgb), 0.05)" stroke="var(--ink-4)" strokeWidth={1} />
+          <text x={65} y={40} fontSize={8} textAnchor="middle" fill="var(--ink-3)" fontFamily="JetBrains Mono">Safe System</text>
+          <line x1={28} y1={52} x2={102} y2={52} stroke="var(--ink-4)" strokeWidth={1} />
+          <rect x={130} y={25} width={90} height={60} rx={3} fill="rgba(var(--red-rgb), 0.08)" stroke="var(--red)" strokeWidth={1.2} />
+          <text x={175} y={40} fontSize={8} textAnchor="middle" fill="var(--red)" fontFamily="JetBrains Mono" fontWeight="bold">Jailbreak!</text>
+          <line x1={138} y1={52} x2={212} y2={52} stroke="var(--red)" strokeWidth={1} />
+          <text x={175} y={70} fontSize={7} textAnchor="middle" fill="var(--red)" fontFamily="JetBrains Mono">Override rules</text>
+        </svg>
+      );
+    case "evaluation":
+      return (
+        <svg viewBox="0 0 240 110" style={{ width: "100%", height: "100%" }}>
+          <rect x={25} y={35} width={50} height={40} rx={2} fill="var(--bg-3)" stroke="var(--border)" />
+          <text x={50} y={52} fontSize={10} textAnchor="middle" fill="var(--green)" fontFamily="JetBrains Mono" fontWeight="bold">92%</text>
+          <text x={50} y={67} fontSize={8} textAnchor="middle" fill="var(--ink-4)" fontFamily="JetBrains Mono">coherence</text>
+          <rect x={95} y={35} width={50} height={40} rx={2} fill="var(--bg-3)" stroke="var(--border)" />
+          <text x={120} y={52} fontSize={10} textAnchor="middle" fill="var(--pink)" fontFamily="JetBrains Mono" fontWeight="bold">1.0</text>
+          <text x={120} y={67} fontSize={8} textAnchor="middle" fill="var(--ink-4)" fontFamily="JetBrains Mono">exact</text>
+          <rect x={165} y={35} width={50} height={40} rx={2} fill="var(--bg-3)" stroke="var(--border)" />
+          <text x={190} y={52} fontSize={10} textAnchor="middle" fill="var(--blue)" fontFamily="JetBrains Mono" fontWeight="bold">0.85</text>
+          <text x={190} y={67} fontSize={8} textAnchor="middle" fill="var(--ink-4)" fontFamily="JetBrains Mono">recall</text>
         </svg>
       );
     default:

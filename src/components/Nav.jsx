@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useHashRoute, navigate } from "../util.jsx";
-import { CONCEPTS, MODULES } from "../data.js";
+import { CONCEPTS, MODULES, conceptSearchText, normalizeSearchText } from "../data.js";
 
 export const REPO_URL = "https://github.com/anubhav100rao/gen-ai-web";
 
@@ -98,14 +98,9 @@ function GlobalSearch() {
   const wrapRef = useRef(null);
 
   const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = normalizeSearchText(query);
     if (!q) return [];
-    return CONCEPTS.filter((c) => {
-      return [c.title, c.oneline, c.tag, c.module.title, c.module.blurb]
-        .join(" ")
-        .toLowerCase()
-        .includes(q);
-    }).slice(0, 6);
+    return CONCEPTS.filter((c) => conceptSearchText(c).includes(q)).slice(0, 8);
   }, [query]);
 
   useEffect(() => {
@@ -138,7 +133,7 @@ function GlobalSearch() {
         type="search"
         value={query}
         autoComplete="off"
-        placeholder="Search demos"
+        placeholder="Search demos, RLHF, evals..."
         onFocus={() => setOpen(true)}
         onChange={(e) => {
           setQuery(e.target.value);

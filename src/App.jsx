@@ -8,29 +8,43 @@ import { ConceptPage } from "./components/ConceptPage.jsx";
 import TokenizerDemo         from "./demos/tokenizer.jsx";
 import EmbeddingsDemo        from "./demos/embeddings.jsx";
 import ContextWindowDemo     from "./demos/context-window.jsx";
+import NextTokenDemo         from "./demos/next-token.jsx";
+import TrainingInferenceDemo from "./demos/training-inference.jsx";
 import TemperatureDemo       from "./demos/temperature.jsx";
+import SamplingDemo          from "./demos/sampling.jsx";
 import AttentionDemo         from "./demos/attention.jsx";
 import PromptEngineeringDemo from "./demos/prompt-engineering.jsx";
 import VectorDBDemo          from "./demos/vector-db.jsx";
 import SearchCompareDemo     from "./demos/search-compare.jsx";
 import RAGDemo               from "./demos/rag.jsx";
+import RAGFailuresDemo       from "./demos/rag-failures.jsx";
 import ToolsDemo             from "./demos/tools.jsx";
 import MCPDemo               from "./demos/mcp.jsx";
 import AgentsDemo            from "./demos/agents.jsx";
+import FineTuningRlhfDemo    from "./demos/fine-tuning-rlhf.jsx";
+import PromptInjectionDemo   from "./demos/prompt-injection.jsx";
+import EvaluationDemo        from "./demos/evaluation.jsx";
 
 const DEMOS = {
   "tokenizer":          () => <TokenizerDemo />,
   "embeddings":         () => <EmbeddingsDemo />,
   "context-window":     () => <ContextWindowDemo />,
+  "next-token":         () => <NextTokenDemo />,
+  "training-inference": () => <TrainingInferenceDemo />,
   "temperature":        () => <TemperatureDemo />,
+  "sampling":           () => <SamplingDemo />,
   "attention":          () => <AttentionDemo />,
   "prompt-engineering": () => <PromptEngineeringDemo />,
   "vector-db":          () => <VectorDBDemo />,
   "search-compare":     () => <SearchCompareDemo />,
   "rag":                () => <RAGDemo />,
+  "rag-failures":       () => <RAGFailuresDemo />,
   "tools":              () => <ToolsDemo />,
   "mcp":                () => <MCPDemo />,
   "agents":             () => <AgentsDemo />,
+  "fine-tuning-rlhf":   () => <FineTuningRlhfDemo />,
+  "prompt-injection":   () => <PromptInjectionDemo />,
+  "evaluation":         () => <EvaluationDemo />,
 };
 
 export default function App() {
